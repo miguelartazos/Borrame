@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "swipeclean",
+    "name": "SwipeClean",
     "slug": "swipeclean",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "swipeclean",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -13,7 +14,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.swipeclean.app",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "We need access to review and clean your photos by swiping. Photos never leave your device.",
+        "NSPhotoLibraryAddUsageDescription": "We need permission to delete items you choose to remove.",
+        "PHPhotoLibraryPreventAutomaticLimitedAccessAlert": true
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,6 +31,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-media-library",
+      "expo-localization",
+      "expo-sqlite",
+      "expo-router"
+    ]
   }
 }

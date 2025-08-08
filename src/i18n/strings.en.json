@@ -1,0 +1,42 @@
+{
+  "requestPhotos": {
+    "title": "SwipeClean",
+    "subtitle": "To help you organize your photos, we need access to your full photo library. This allows you to review and clean up all your memories.",
+    "cta": "Allow Access",
+    "limitedBanner": "You've given limited access. Tap here to grant full access in Settings."
+  },
+  "indexer": {
+    "limitedAccess": {
+      "title": "Limited access",
+      "body": "Only {{count}} photos available. Grant Full Access to review everything.",
+      "cta": "Open Settings"
+    }
+  },
+  "deck": {
+    "title": "Review Photos",
+    "filters": {
+      "all": "All",
+      "screenshots": "Screenshots",
+      "recent": "Recent"
+    },
+    "overlayDelete": "DELETE",
+    "overlayKeep": "KEEP",
+    "delete": "Delete",
+    "keep": "Keep",
+    "undo": "Undo",
+    "deletePhoto": "Delete photo",
+    "deletePhotoHint": "Mark this photo for deletion",
+    "keepPhoto": "Keep photo",
+    "keepPhotoHint": "Keep this photo in your library",
+    "empty": {
+      "title": "All caught up!",
+      "subtitle": "Nothing to review here.",
+      "switchFilter": "Try a different filter",
+      "openPending": "Review Pending Deletes"
+    },
+    "indexing": {
+      "progress": "Indexing {{indexed}} / {{total}}"
+    },
+    "counter": "{{reviewed}} / {{available}}"
+  }
+}
