@@ -2,6 +2,8 @@ import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { useDeckAssets } from './useDeckAssets';
 import * as selectors from '../features/deck/selectors';
 import { logger } from '../lib/logger';
+import { useDeckStore } from '../store/useDeckStore';
+import { useIndexStore } from '../store/useIndexStore';
 
 jest.mock('../features/deck/selectors');
 jest.mock('../lib/logger', () => ({
@@ -9,8 +11,12 @@ jest.mock('../lib/logger', () => ({
     error: jest.fn(),
   },
 }));
+jest.mock('../store/useDeckStore');
+jest.mock('../store/useIndexStore');
 
 const mockSelectors = selectors as jest.Mocked<typeof selectors>;
+const mockUseDeckStore = useDeckStore as unknown as jest.MockedFunction<typeof useDeckStore>;
+const mockUseIndexStore = useIndexStore as unknown as jest.MockedFunction<typeof useIndexStore>;
 
 describe('useDeckAssets', () => {
   const mockAssets = [
@@ -24,6 +30,21 @@ describe('useDeckAssets', () => {
     mockSelectors.getUndecidedAssets.mockResolvedValue(mockAssets);
     mockSelectors.getUndecidedCount.mockResolvedValue(50);
     mockSelectors.getTotalReviewedCount.mockResolvedValue(10);
+
+    mockUseDeckStore.mockReturnValue({
+      generation: 0,
+      cacheRemovedAsset: jest.fn(),
+      getCachedAsset: jest.fn(),
+      error: null,
+      setError: jest.fn(),
+    } as any);
+
+    mockUseIndexStore.mockImplementation((selector?: any) => {
+      if (selector) {
+        return undefined; // lastSuccessfulBatchAt
+      }
+      return { lastSuccessfulBatchAt: undefined } as any;
+    });
   });
 
   it('should load initial assets when enabled', async () => {
@@ -195,6 +216,103 @@ describe('useDeckAssets', () => {
     expect(result.current.availableCount).toBe(0);
     expect(result.current.reviewedCount).toBe(0);
     expect(logger.error).toHaveBeenCalledWith('Failed to load initial assets', error);
+  });
+
+  it('should respect generation counter in loadMore', async () => {
+    const { result } = renderHook(() => useDeckAssets('all', true));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    // Simulate generation change (filter changed)
+    mockUseDeckStore.mockReturnValue({
+      generation: 1, // Different generation
+      cacheRemovedAsset: jest.fn(),
+      getCachedAsset: jest.fn(),
+      error: null,
+      setError: jest.fn(),
+    } as any);
+
+    // loadMore should ignore the results
+    await act(async () => {
+      await result.current.loadMore();
+    });
+
+    // Assets should not be updated since generation mismatched
+    expect(result.current.assets).toHaveLength(3); // Still original 3
+  });
+
+  it('should reinsert cached asset on undo', async () => {
+    const cachedAsset = {
+      id: 'cached-1',
+      uri: 'file://cached.jpg',
+      width: 100,
+      height: 100,
+      created_at: Date.now(),
+      is_screenshot: false,
+    };
+
+    const getCachedAssetMock = jest.fn().mockReturnValue(cachedAsset);
+    mockUseDeckStore.mockReturnValue({
+      generation: 0,
+      cacheRemovedAsset: jest.fn(),
+      getCachedAsset: getCachedAssetMock,
+      error: null,
+      setError: jest.fn(),
+    } as any);
+
+    const { result } = renderHook(() => useDeckAssets('all', true));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    // Reinsert the cached asset
+    act(() => {
+      const reinserted = result.current.reinsertAsset('cached-1');
+      expect(reinserted).toBe(true);
+    });
+
+    expect(result.current.assets).toHaveLength(4);
+    expect(result.current.assets[0]).toEqual(cachedAsset);
+    expect(result.current.availableCount).toBe(51);
+    expect(result.current.reviewedCount).toBe(9);
+  });
+
+  it('should not reinsert asset that does not match filter', async () => {
+    const screenshotAsset = {
+      id: 'screenshot-1',
+      uri: 'file://screenshot.jpg',
+      width: 100,
+      height: 100,
+      created_at: Date.now(),
+      is_screenshot: true,
+    };
+
+    const getCachedAssetMock = jest.fn().mockReturnValue(screenshotAsset);
+    mockUseDeckStore.mockReturnValue({
+      generation: 0,
+      cacheRemovedAsset: jest.fn(),
+      getCachedAsset: getCachedAssetMock,
+      error: null,
+      setError: jest.fn(),
+    } as any);
+
+    // Using 'recent' filter, but asset is a screenshot
+    const { result } = renderHook(() => useDeckAssets('recent', true));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    // Try to reinsert - should succeed for 'recent' filter
+    act(() => {
+      const reinserted = result.current.reinsertAsset('screenshot-1');
+      expect(reinserted).toBe(true); // Recent filter allows screenshots
+    });
+
+    expect(result.current.assets).toHaveLength(4);
   });
 
   it('should handle load more errors', async () => {

@@ -1,0 +1,15 @@
+{
+  "bg": "#0B0B10",
+  "card": "#11131A",
+  "surface": "#141724",
+  "textPrimary": "#EDEFF5",
+  "textSecondary": "#B9C0CF",
+  "line": "#232534",
+  "primary": "#FF7A1A",
+  "primaryMuted": "#FFB27A",
+  "success": "#2ECC71",
+  "danger": "#FF4D4F",
+  "transparent": "transparent",
+  "white": "#FFFFFF",
+  "black": "#000000"
+}

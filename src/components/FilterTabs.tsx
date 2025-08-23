@@ -17,28 +17,28 @@ export const FilterTabs = memo(
     const { t } = useTranslation();
 
     return (
-      <View className="flex-row mb-4">
-        <View className="flex-row flex-1 bg-white rounded-lg p-1">
+      <View className="flex-row mb-6 px-4">
+        <View className="flex-row gap-3">
           {FILTERS.map((f) => (
             <Pressable
               key={f}
               onPress={() => onFilterChange(f)}
-              className={`flex-1 py-2 px-3 rounded-md ${filter === f ? 'bg-blue-500' : ''}`}
+              className={`px-4 py-2 ${filter === f ? '' : ''}`}
+              testID={`filterTab_${f}`}
             >
               <Text
-                className={`text-center text-sm font-medium ${
-                  filter === f ? 'text-white' : 'text-gray-600'
-                }`}
+                className={`text-sm font-medium ${filter === f ? 'text-black' : 'text-gray-400'}`}
               >
                 {t(`deck.filters.${f}`)}
               </Text>
+              {filter === f && <View className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
             </Pressable>
           ))}
         </View>
 
-        <View className="ml-4 justify-center">
-          <Text className="text-sm text-gray-500">
-            {t('deck.counter', { reviewed: reviewedCount, available: availableCount })}
+        <View className="flex-1 items-end justify-center">
+          <Text className="text-sm text-gray-500 font-medium">
+            {reviewedCount}/{availableCount}
           </Text>
         </View>
       </View>

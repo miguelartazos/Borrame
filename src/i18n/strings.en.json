@@ -1,9 +1,61 @@
 {
+  "landing": {
+    "continue": "Continue",
+    "terms": "By using SwipeClean, you agree to our Terms and Privacy Policy."
+  },
+  "settings": {
+    "title": "Settings"
+  },
+  "home": {
+    "revisado": "reviewed",
+    "ordenarAhora": "Clean Now",
+    "listos": "ready",
+    "tuBiblioteca": "Your library",
+    "papeleraPendiente": "Pending Bin",
+    "ajustarMeta": "Adjust goal",
+    "unDiaComoHoy": "On this day",
+    "fotos": "{{n}} photos",
+    "bibliotecaMeses": "Your library · {{n}} months",
+    "meses": "{{n}} months",
+    "verTodo": "See all",
+    "biblioteca": "Library",
+    "racha": "Streak",
+    "meta": "Goal",
+    "hoy": "Today",
+    "completado": "completed",
+    "noCompletado": "not completed",
+    "chips": {
+      "all": "All",
+      "screenshots": "Screenshots",
+      "blurry": "Blurry",
+      "similar": "Similar",
+      "videos": "Videos",
+      "todo": "All",
+      "pantallazos": "Screenshots",
+      "borrosas": "Blurry",
+      "similares": "Similar"
+    },
+    "months": {
+      "ene": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "abr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "ago": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dic": "Dec"
+    }
+  },
   "requestPhotos": {
     "title": "SwipeClean",
     "subtitle": "To help you organize your photos, we need access to your full photo library. This allows you to review and clean up all your memories.",
     "cta": "Allow Access",
-    "limitedBanner": "You've given limited access. Tap here to grant full access in Settings."
+    "limitedBanner": "You've given limited access. Tap here to grant full access in Settings.",
+    "error": "We couldn't request photo access. Please try again."
   },
   "indexer": {
     "limitedAccess": {
@@ -37,6 +89,277 @@
     "indexing": {
       "progress": "Indexing {{indexed}} / {{total}}"
     },
-    "counter": "{{reviewed}} / {{available}}"
+    "counter": "{{reviewed}} / {{available}}",
+    "tutorial": {
+      "title": "Swipe to sort your photos",
+      "left": "Left = Delete",
+      "right": "Right = Keep",
+      "cta": "Got it",
+      "archive": "Archive",
+      "save": "Save",
+      "swipeLeft": "Swipe left to archive",
+      "swipeRight": "Swipe right to save"
+    },
+    "albumChip": {
+      "selected": "Album: {{title}}"
+    }
+  },
+  "paywall": {
+    "unlock_bundle_title": "Unlock Smart Detection",
+    "unlock_pro_title": "Activate SwipeClean Pro",
+    "unlock_bundle_subtitle": "Find and clean similar and blurry photos automatically",
+    "activate_pro_clean_all": "Activate Pro to clean everything",
+    "preview_title": "{{count}} photos detected",
+    "benefits": {
+      "smart_detection": "Smart Detection",
+      "smart_detection_desc": "Find similar and blurry photos automatically",
+      "unlimited_deletes": "Unlimited Deletions",
+      "unlimited_deletes_desc": "No daily limit of 50 photos",
+      "priority_support": "Priority Support",
+      "priority_support_desc": "Direct help from the SwipeClean team"
+    },
+    "best_value": "BEST VALUE",
+    "yearly_plan": "Annual Plan",
+    "monthly_plan": "Monthly Plan",
+    "year": "year",
+    "month": "month",
+    "yearly_savings": "Save 33% vs monthly",
+    "monthly_detail": "Renews monthly",
+    "disclaimer": "Prices are in USD. Subscription renews automatically. Cancel anytime.",
+    "maybe_later": "Maybe later"
+  },
+  "categories": {
+    "tile_locked": "{{title}}: {{count}} photos (Pro)",
+    "tile_unlocked": "{{title}}: {{count}} photos"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry": "Retry",
+    "ok": "OK",
+    "done": "Done",
+    "error": "Error",
+    "success": "Success",
+    "partial": "Partial Success",
+    "openSettings": "Open Settings"
+  },
+  "pending": {
+    "title": "Pending Bin",
+    "empty": {
+      "title": "No photos marked for deletion",
+      "subtitle": "Go back to review your photos",
+      "goBack": "Review Photos"
+    },
+    "commit": {
+      "cta": "Commit",
+      "noItems": "No items to delete",
+      "preparing": "Preparing to delete...",
+      "failed": "Failed to commit deletions",
+      "permissionError": "Photo library permission was revoked. Please grant access in Settings to continue.",
+      "preview": {
+        "title": "Confirm Deletion",
+        "message": "{{count}} photos will be moved to Recently Deleted. Estimated space freed: {{size}}"
+      },
+      "confirm": {
+        "title": "Move to Recently Deleted?",
+        "button": "Move to Recently Deleted",
+        "large": "This is a large delete. {{message}}"
+      },
+      "doubleConfirm": {
+        "title": "Are you absolutely sure?",
+        "message": "This action cannot be undone immediately. Photos will be in Recently Deleted for 30 days.",
+        "button": "Yes, Delete"
+      }
+    },
+    "restore": "Restore",
+    "restoreAll": "Restore All",
+    "selected": "{{count}} selected",
+    "spaceEstimate": "~{{size}} to free",
+    "restore.failed": "Failed to restore item",
+    "restoreAll.title": "Restore All Photos?",
+    "restoreAll.message": "This will remove all photos from the pending bin",
+    "restoreAll.failed": "Failed to restore all items"
+  },
+  "limits": {
+    "meter": "You can delete {{remaining}} more today",
+    "hitCap": "You've reached today's free limit",
+    "unlimited": "Unlimited deletes"
+  },
+  "onThisDay": {
+    "title": "On this day",
+    "photos": "photos",
+    "cta": "Review top 5",
+    "accessibilityLabel": "On this day card with {{count}} photos",
+    "imageError": "Error loading image",
+    "previewImage": "Preview {{number}}",
+    "placeholderImage": "Placeholder {{number}}",
+    "loadingImage": "Loading image"
+  },
+  "paywall": {
+    "title": "Clean your entire gallery today",
+    "subtitle": "Unlock unlimited deletes and premium features",
+    "unlock": "Unlock Premium",
+    "benefits": {
+      "unlimited": "Unlimited photo deletions every day",
+      "priority": "Priority processing for large libraries",
+      "advanced": "Advanced filters and smart suggestions"
+    },
+    "monthly": {
+      "title": "Monthly",
+      "description": "Cancel anytime"
+    },
+    "yearly": {
+      "title": "Yearly",
+      "description": "Save 33% with annual billing",
+      "badge": "SAVE 33%"
+    },
+    "terms": "Subscription auto-renews. Cancel anytime in Settings."
+  },
+  "result": {
+    "success": "Moved {{count}} items to Recently Deleted. {{size}} freed.",
+    "partial": "{{success}} deleted, {{failed}} failed",
+    "retryFailed": "Retry Failed Items"
+  },
+  "streak": {
+    "current": "Current streak",
+    "days": "days",
+    "setGoal": "Set goal",
+    "pills": {
+      "streak": "Streak",
+      "goal": "Goal",
+      "today": "Today",
+      "perDay": "/day",
+      "minPerDay_one": "min/day",
+      "minPerDay_other": "mins/day"
+    },
+    "modal": {
+      "title": "Adjust Goals",
+      "minutesLabel": "Daily time goal",
+      "minutesUnit": "minutes per day",
+      "mbLabel": "Daily space goal",
+      "weekLabel": "This week",
+      "save": "Save Goals"
+    }
+  },
+  "stats": {
+    "sorted": "sorted",
+    "toDelete": "to delete"
+  },
+  "carousel": {
+    "onThisDay": "On this day",
+    "noPhotos": "No photos from this day in previous years"
+  },
+  "sorting": {
+    "title": "Sort"
+  },
+  "header": {
+    "invite": "Invite",
+    "inviteTooltip": "Invite friends"
+  },
+  "referrals": {
+    "title": "Invite friends",
+    "shareCode": "share code",
+    "earnRewards": "Earn rewards",
+    "friendsJoined": "{{count}} friends joined",
+    "friendsJoinedProgress": "{{current}} of {{target}} friends joined",
+    "rewards": {
+      "swipesPerFriend": "1000 swipes",
+      "perFriend": "per friend",
+      "monthPro": "One month of SUPER Picnic",
+      "yearPro": "One year of SUPER Picnic",
+      "forFriends": "for {{count}} friends"
+    },
+    "inviteFriendsCta": "Invite friends",
+    "redeemCodeCta": "Redeem code",
+    "copy": "Copy",
+    "share": "Share",
+    "enterCode": "Enter your code",
+    "redeem": "Redeem",
+    "invalidCode": "Invalid code",
+    "redeemTitle": "Redeem code",
+    "redeemSubtitle": "Share your code with friends or redeem one here"
+  },
+  "heroCard": {
+    "cleanNow": "Clean now",
+    "spaceReady": "ready",
+    "reviewed": "reviewed",
+    "swipeHint": "Swipe to organize. You can undo anytime.",
+    "cleanHint": "Start organizing your photos by swiping"
+  },
+  "bundles": {
+    "title": "Smart Bundles",
+    "duplicados": "Duplicates",
+    "borrosas": "Blurry",
+    "pantallazos": "Screenshots",
+    "rafaga": "Burst Photos",
+    "whatsapp": "WhatsApp/Telegram",
+    "videos_largos": "Long Videos",
+    "archivos_grandes": "Large Files",
+    "recibos": "Receipts/Docs",
+    "pro_badge": "Pro",
+    "tile_locked": "{{title}}, {{count}} items, locked",
+    "tile_unlocked": "{{title}}, {{count}} items"
+  },
+  "categories": {
+    "duplicates": "Duplicates",
+    "blurry": "Blurry",
+    "screenshots": "Screenshots",
+    "burst": "Burst photos",
+    "whatsapp": "WhatsApp/Telegram",
+    "long_videos": "Long videos",
+    "large_files": "Large files",
+    "documents": "Documents/Receipts",
+    "tile_locked": "{{title}}: {{count}} items, Pro feature",
+    "tile_unlocked": "{{title}}: {{count}} items"
+  },
+  "floatingButton": {
+    "swipeNow": "Swipe now",
+    "hint": "Swipe right to dismiss"
+  },
+  "library": {
+    "title": "Your library",
+    "loadError": "Error loading library",
+    "filterComingSoon": "Filters coming soon",
+    "filterTitle": "Filter and sort",
+    "sortBy": "Sort by",
+    "filterBy": "Type",
+    "sort": {
+      "newest": "Newest first",
+      "oldest": "Oldest first"
+    },
+    "filter": {
+      "all": "All",
+      "photos": "Photos",
+      "videos": "Videos"
+    },
+    "empty": {
+      "title": "Empty library",
+      "subtitle": "No photos to display"
+    },
+    "actions": {
+      "title": "Actions",
+      "duplicates": "Review duplicates",
+      "videosOnly": "Videos only",
+      "oldestFirst": "Oldest first"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  },
+  "albumPicker": {
+    "title": "Choose album",
+    "searchPlaceholder": "Search albums",
+    "allPhotos": "All photos"
   }
 }

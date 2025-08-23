@@ -15,7 +15,9 @@ export async function insertAssets(assets: Omit<Asset, 'id'>[]): Promise<void> {
   await db.runAsync('BEGIN TRANSACTION');
 
   try {
-    const placeholders = assets.map(() => '(?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
+    const placeholders = assets
+      .map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+      .join(', ');
     const values = assets.flatMap((asset) => [
       generateId(),
       asset.uri,
@@ -25,10 +27,20 @@ export async function insertAssets(assets: Omit<Asset, 'id'>[]): Promise<void> {
       asset.height,
       asset.created_at,
       asset.is_screenshot,
+      asset.is_blurry ?? 0,
+      asset.is_burst ?? 0,
+      asset.is_whatsapp ?? 0,
+      asset.is_video ?? 0,
+      asset.duration_ms ?? null,
+      asset.mime_type ?? null,
+      asset.content_hash ?? null,
     ]);
 
     const sql = `
-      INSERT OR IGNORE INTO assets (id, uri, filename, size_bytes, width, height, created_at, is_screenshot)
+      INSERT OR IGNORE INTO assets (
+        id, uri, filename, size_bytes, width, height, created_at, is_screenshot,
+        is_blurry, is_burst, is_whatsapp, is_video, duration_ms, mime_type, content_hash
+      )
       VALUES ${placeholders}
     `;
 
@@ -46,8 +58,10 @@ export async function upsertAsset(asset: Omit<Asset, 'id'>, id?: string): Promis
   const assetId = id || generateId();
 
   await db.runAsync(
-    `INSERT OR REPLACE INTO assets (id, uri, filename, size_bytes, width, height, created_at, is_screenshot)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT OR REPLACE INTO assets (
+       id, uri, filename, size_bytes, width, height, created_at, is_screenshot,
+       is_blurry, is_burst, is_whatsapp, is_video, duration_ms, mime_type, content_hash
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       assetId,
       asset.uri,
@@ -57,6 +71,13 @@ export async function upsertAsset(asset: Omit<Asset, 'id'>, id?: string): Promis
       asset.height,
       asset.created_at,
       asset.is_screenshot,
+      asset.is_blurry ?? 0,
+      asset.is_burst ?? 0,
+      asset.is_whatsapp ?? 0,
+      asset.is_video ?? 0,
+      asset.duration_ms ?? null,
+      asset.mime_type ?? null,
+      asset.content_hash ?? null,
     ]
   );
 
@@ -174,6 +195,14 @@ export async function getAssetCount(): Promise<number> {
   const result = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM assets');
 
   return result?.count || 0;
+}
+
+export async function getLatestAssetTimestamp(): Promise<number> {
+  const db = await getDatabase();
+  const result = await db.getFirstAsync<{ max: number | null }>(
+    'SELECT MAX(created_at) as max FROM assets'
+  );
+  return result?.max ?? 0;
 }
 
 export async function getProcessedCount(): Promise<{ kept: number; deleted: number }> {

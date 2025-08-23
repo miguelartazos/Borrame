@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.swipeclean.app",
+      "bundleIdentifier": "com.miguel.swipeclean",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "We need access to review and clean your photos by swiping. Photos never leave your device.",
         "NSPhotoLibraryAddUsageDescription": "We need permission to delete items you choose to remove.",
@@ -32,11 +32,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-media-library",
-      "expo-localization",
-      "expo-sqlite",
-      "expo-router"
-    ]
+    "plugins": ["expo-media-library", "expo-localization", "expo-sqlite", "expo-router"]
   }
 }

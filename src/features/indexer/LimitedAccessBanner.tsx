@@ -2,19 +2,19 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle } from 'lucide-react-native';
-import { useIndexStatus } from '../../store/useIndexStore';
+import { useIndexLimitedScope, useIndexLimitedCount } from '../../store/useIndexStore';
 
 export function LimitedAccessBanner() {
   const { t } = useTranslation();
-  const { limitedScope, limitedCount } = useIndexStatus();
+  const limitedScope = useIndexLimitedScope();
+  const limitedCount = useIndexLimitedCount();
 
   if (!limitedScope) {
     return null;
   }
 
   const handleOpenSettings = () => {
-    // TODO: Add telemetry for CTA taps
-    Linking.openURL('app-settings:');
+    Linking.openSettings();
   };
 
   return (

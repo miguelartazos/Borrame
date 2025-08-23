@@ -1,5 +1,7 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, Dimensions, Pressable, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -12,10 +14,17 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { PhotoCard } from './PhotoCard';
-import { SWIPE_THRESHOLDS, DECK_CONFIG } from '../features/deck/constants';
+import { SwipeTutorialOverlay } from './SwipeTutorialOverlay';
+import { SWIPE_THRESHOLDS, DECK_CONFIG, SPRING_CONFIG } from '../features/deck/constants';
 import { useHistory } from '../store/useHistory';
-import { useDeckDecisions } from '../hooks/useDeckDecisions';
+import { useSettings } from '../store/useSettings';
+import {
+  useMakeDecision,
+  useSwipeLeftAction,
+  useSwipeRightAction,
+} from '../hooks/useDeckDecisions';
 import { useImagePrefetch } from '../hooks/useImagePrefetch';
+import { analytics } from '../lib/analytics';
 import type { Asset } from '../db/schema';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -27,6 +36,7 @@ interface DeckProps {
   onDecide: (assetId: string, action: 'delete' | 'keep') => void;
   onLoadMore: () => void;
   onUndo: () => void;
+  gestureEnabled?: boolean;
 }
 
 export function Deck({
@@ -36,14 +46,31 @@ export function Deck({
   onDecide,
   onLoadMore,
   onUndo,
+  gestureEnabled = true,
 }: DeckProps) {
   const { t } = useTranslation();
-  const { canUndo } = useHistory();
+  const canUndo = useHistory((s) => s.buffer.length > 0);
+
+  const hasSeenLeftSwipe = useSettings((s) => s.hasSeenLeftSwipeTutorial);
+  const hasSeenRightSwipe = useSettings((s) => s.hasSeenRightSwipeTutorial);
+  const setHasSeenLeftSwipe = useSettings((s) => s.setHasSeenLeftSwipeTutorial);
+  const setHasSeenRightSwipe = useSettings((s) => s.setHasSeenRightSwipeTutorial);
+
+  const [showTutorial, setShowTutorial] = useState<{
+    visible: boolean;
+    direction: 'left' | 'right';
+  }>({
+    visible: false,
+    direction: 'left',
+  });
+  const [pendingSwipeDirection, setPendingSwipeDirection] = useState<'left' | 'right' | null>(null);
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
-  const { makeDecision, swipeLeftAction, swipeRightAction } = useDeckDecisions({
+  const swipeLeftAction = useSwipeLeftAction();
+  const swipeRightAction = useSwipeRightAction();
+  const makeDecision = useMakeDecision({
     onDecisionComplete: (assetId, action) => {
       onDecide(assetId, action);
       onIndexChange(Math.min(currentIndex + 1, assets.length - 1));
@@ -76,14 +103,8 @@ export function Deck({
 
   const resetPosition = useCallback(() => {
     'worklet';
-    translateX.value = withSpring(0, {
-      damping: 20,
-      stiffness: 300,
-    });
-    translateY.value = withSpring(0, {
-      damping: 20,
-      stiffness: 300,
-    });
+    translateX.value = withSpring(0, SPRING_CONFIG.SWIPE_BACK);
+    translateY.value = withSpring(0, SPRING_CONFIG.SWIPE_BACK);
   }, [translateX, translateY]);
 
   const animateCardOut = useCallback(
@@ -99,10 +120,59 @@ export function Deck({
     [translateX, translateY, handleSwipeDecision]
   );
 
+  const handleTutorialDone = useCallback(() => {
+    const direction = showTutorial.direction;
+    setShowTutorial({ visible: false, direction: 'left' });
+
+    if (direction === 'left') {
+      setHasSeenLeftSwipe(true);
+      analytics.track('swipe_tutorial_dismissed', { direction: 'left' });
+    } else {
+      setHasSeenRightSwipe(true);
+      analytics.track('swipe_tutorial_dismissed', { direction: 'right' });
+    }
+
+    // Complete the pending swipe if there was one
+    if (pendingSwipeDirection) {
+      animateCardOut(pendingSwipeDirection);
+      setPendingSwipeDirection(null);
+    }
+  }, [
+    showTutorial.direction,
+    pendingSwipeDirection,
+    setHasSeenLeftSwipe,
+    setHasSeenRightSwipe,
+    animateCardOut,
+  ]);
+
+  const checkAndShowTutorial = useCallback(
+    (direction: 'left' | 'right') => {
+      if (direction === 'left' && !hasSeenLeftSwipe) {
+        setShowTutorial({ visible: true, direction: 'left' });
+        setPendingSwipeDirection(direction);
+        return;
+      } else if (direction === 'right' && !hasSeenRightSwipe) {
+        setShowTutorial({ visible: true, direction: 'right' });
+        setPendingSwipeDirection(direction);
+        return;
+      }
+      // If we've seen the tutorial, perform the swipe
+      animateCardOut(direction);
+    },
+    [hasSeenLeftSwipe, hasSeenRightSwipe, animateCardOut]
+  );
+
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       translateX.value = event.translationX;
       translateY.value = event.translationY * 0.3;
+
+      // Haptic feedback at swipe threshold
+      if (Math.abs(event.translationX) > SWIPE_THRESHOLDS.TRANSLATE_X * 0.8) {
+        if (!translateX.value || Math.abs(translateX.value) <= SWIPE_THRESHOLDS.TRANSLATE_X * 0.8) {
+          runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+        }
+      }
     })
     .onEnd((event) => {
       const shouldSwipeLeft =
@@ -114,23 +184,32 @@ export function Deck({
         event.velocityX > SWIPE_THRESHOLDS.VELOCITY_X;
 
       if (shouldSwipeLeft) {
-        animateCardOut('left');
+        runOnJS(checkAndShowTutorial)('left');
+        resetPosition();
       } else if (shouldSwipeRight) {
-        animateCardOut('right');
+        runOnJS(checkAndShowTutorial)('right');
+        resetPosition();
       } else {
         resetPosition();
       }
     });
 
+  const effectiveGesture = gestureEnabled ? panGesture : Gesture.Pan().enabled(false);
+
   const handleKeep = () => {
-    animateCardOut(swipeRightAction === 'keep' ? 'right' : 'left');
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const direction = swipeRightAction === 'keep' ? 'right' : 'left';
+    checkAndShowTutorial(direction);
   };
 
   const handleDelete = () => {
-    animateCardOut(swipeLeftAction === 'delete' ? 'left' : 'right');
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const direction = swipeLeftAction === 'delete' ? 'left' : 'right';
+    checkAndShowTutorial(direction);
   };
 
   const handleUndo = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onUndo();
     if (currentIndex > 0) {
       onIndexChange(currentIndex - 1);
@@ -155,7 +234,7 @@ export function Deck({
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <GestureHandlerRootView style={styles.container} testID="deckContainer">
       <Animated.View style={[styles.cardStack, stackAnimatedStyle]}>
         {visibleCards
           .slice(0)
@@ -166,7 +245,7 @@ export function Deck({
 
             if (isTop) {
               return (
-                <GestureDetector key={asset.id} gesture={panGesture}>
+                <GestureDetector key={asset.id} gesture={effectiveGesture}>
                   <PhotoCard
                     asset={asset}
                     translateX={translateX}
@@ -203,35 +282,69 @@ export function Deck({
       </Animated.View>
 
       <View style={styles.buttonContainer}>
-        <Pressable
-          style={[styles.actionButton, styles.deleteButton]}
-          onPress={handleDelete}
-          accessibilityLabel={t('deck.deletePhoto')}
-          accessibilityHint={t('deck.deletePhotoHint')}
-        >
-          <Text style={styles.buttonText}>{t('deck.delete')}</Text>
-        </Pressable>
-
-        {canUndo() && (
+        <View style={styles.actionButtonWrapper}>
           <Pressable
-            style={[styles.actionButton, styles.undoButton]}
-            onPress={handleUndo}
-            accessibilityLabel={t('deck.undo')}
-            testID="UndoButton"
+            style={({ pressed }) => [
+              styles.actionButton,
+              styles.deleteButton,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={handleDelete}
+            accessibilityLabel={t('deck.deletePhoto')}
+            accessibilityHint={t('deck.deletePhotoHint')}
+            testID="deleteButton"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Text style={styles.buttonText}>{t('deck.undo')}</Text>
+            <Ionicons name="close" size={28} color="#000" />
           </Pressable>
+          <Text style={styles.actionLabel}>{t('deck.delete')}</Text>
+        </View>
+
+        {canUndo && (
+          <View style={styles.actionButtonWrapper}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.actionButton,
+                styles.undoButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleUndo}
+              accessibilityLabel={t('deck.undo')}
+              testID="undoButton"
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Ionicons name="arrow-undo" size={24} color="#000" />
+            </Pressable>
+            <Text style={styles.actionLabel}>{t('deck.undo')}</Text>
+          </View>
         )}
 
-        <Pressable
-          style={[styles.actionButton, styles.keepButton]}
-          onPress={handleKeep}
-          accessibilityLabel={t('deck.keepPhoto')}
-          accessibilityHint={t('deck.keepPhotoHint')}
-        >
-          <Text style={styles.buttonText}>{t('deck.keep')}</Text>
-        </Pressable>
+        <View style={styles.actionButtonWrapper}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.actionButton,
+              styles.keepButton,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={handleKeep}
+            accessibilityLabel={t('deck.keepPhoto')}
+            accessibilityHint={t('deck.keepPhotoHint')}
+            testID="keepButton"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons name="checkmark" size={32} color="#000" />
+          </Pressable>
+          <Text style={styles.actionLabel}>{t('deck.keep')}</Text>
+        </View>
       </View>
+
+      {/* Swipe Tutorial Overlay */}
+      <SwipeTutorialOverlay
+        visible={showTutorial.visible}
+        direction={showTutorial.direction}
+        photoUri={visibleCards[0]?.uri}
+        onDone={handleTutorialDone}
+      />
     </GestureHandlerRootView>
   );
 }
@@ -255,29 +368,48 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    gap: 12,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingHorizontal: 40,
+    paddingBottom: 30,
+    gap: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  actionButtonWrapper: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  actionButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: 'rgba(0, 0, 0, 0.08)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  actionLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#666',
+    marginTop: 2,
+  },
   deleteButton: {
-    backgroundColor: '#ef4444',
+    transform: [{ scale: 0.9 }],
   },
   keepButton: {
-    backgroundColor: '#22c55e',
+    transform: [{ scale: 1.1 }],
   },
   undoButton: {
-    backgroundColor: '#6b7280',
+    transform: [{ scale: 0.85 }],
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  buttonPressed: {
+    transform: [{ scale: 0.92 }],
+    opacity: 0.8,
   },
 });

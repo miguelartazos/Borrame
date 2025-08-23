@@ -1,0 +1,16 @@
+# Screenshot Placeholder
+This is a placeholder for the Home_v1_dark.png screenshot.
+
+To generate the actual screenshot:
+1. Run the app in dark mode on iPhone 15 simulator
+2. Execute: node scripts/capture-screenshot.js
+3. Or use the in-app screenshot feature from DebugHome screen
+
+The screenshot should show:
+- Dark mode theme
+- Home screen with hero card
+- Stats row
+- Photo carousel
+- Sorting grid
+- All using consistent spacing (8/12/16/20/24)
+- Corner radius: md=16 for pills, xl=24 for cards

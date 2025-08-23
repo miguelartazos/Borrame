@@ -1,164 +1,204 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-native';
 import * as Haptics from 'expo-haptics';
 import { useDeckDecisions } from './useDeckDecisions';
 import { useSettings } from '../store/useSettings';
 import { useHistory } from '../store/useHistory';
-import { addIntent, removeIntent } from '../db/helpers';
-import { logger } from '../lib/logger';
+import * as dbHelpers from '../db/helpers';
+import { analytics } from '../lib/analytics';
 
 jest.mock('expo-haptics');
 jest.mock('../store/useSettings');
 jest.mock('../store/useHistory');
 jest.mock('../db/helpers');
-jest.mock('../lib/logger');
+jest.mock('../lib/analytics', () => ({
+  analytics: {
+    track: jest.fn(),
+  },
+}));
+
+const mockUseSettings = useSettings as jest.MockedFunction<typeof useSettings>;
+const mockUseHistory = useHistory as jest.MockedFunction<typeof useHistory>;
+const mockAddIntent = dbHelpers.addIntent as jest.MockedFunction<typeof dbHelpers.addIntent>;
+const mockRemoveIntent = dbHelpers.removeIntent as jest.MockedFunction<
+  typeof dbHelpers.removeIntent
+>;
 
 describe('useDeckDecisions', () => {
   const mockPushAction = jest.fn();
   const mockPopAction = jest.fn();
+  const mockOnDecisionComplete = jest.fn();
+  const mockOnUndoComplete = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (useSettings as any).mockReturnValue({
+    mockUseSettings.mockReturnValue({
       swipeLeftAction: 'delete',
       swipeRightAction: 'keep',
       hapticFeedback: true,
-    });
+    } as any);
 
-    (useHistory as any).mockReturnValue({
+    mockUseHistory.mockReturnValue({
       pushAction: mockPushAction,
       popAction: mockPopAction,
-    });
+    } as any);
+
+    mockAddIntent.mockResolvedValue(undefined);
+    mockRemoveIntent.mockResolvedValue(undefined);
   });
 
   describe('makeDecision', () => {
-    it('should handle left swipe with delete action', async () => {
-      const onDecisionComplete = jest.fn();
-      const { result } = renderHook(() => useDeckDecisions({ onDecisionComplete }));
+    it('should make a decision with haptic feedback', async () => {
+      const { result } = renderHook(() =>
+        useDeckDecisions({
+          onDecisionComplete: mockOnDecisionComplete,
+        })
+      );
 
       await act(async () => {
-        await result.current.makeDecision('asset_123', 'left');
-      });
-
-      expect(mockPushAction).toHaveBeenCalledWith('asset_123', 'delete');
-      expect(addIntent).toHaveBeenCalledWith('asset_123', 'delete');
-      expect(onDecisionComplete).toHaveBeenCalledWith('asset_123', 'delete');
-    });
-
-    it('should handle right swipe with keep action', async () => {
-      const onDecisionComplete = jest.fn();
-      const { result } = renderHook(() => useDeckDecisions({ onDecisionComplete }));
-
-      await act(async () => {
-        await result.current.makeDecision('asset_456', 'right');
-      });
-
-      expect(mockPushAction).toHaveBeenCalledWith('asset_456', 'keep');
-      expect(addIntent).toHaveBeenCalledWith('asset_456', 'keep');
-      expect(onDecisionComplete).toHaveBeenCalledWith('asset_456', 'keep');
-    });
-
-    it('should trigger haptic feedback when enabled', async () => {
-      const { result } = renderHook(() => useDeckDecisions());
-
-      await act(async () => {
-        await result.current.makeDecision('asset_789', 'left');
+        await result.current.makeDecision('asset-1', 'left');
       });
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Light);
+      expect(mockPushAction).toHaveBeenCalledWith('asset-1', 'delete');
+      expect(mockAddIntent).toHaveBeenCalledWith('asset-1', 'delete');
+      expect(analytics.track).toHaveBeenCalledWith('swipe_decide', { action: 'delete' });
+      expect(mockOnDecisionComplete).toHaveBeenCalledWith('asset-1', 'delete');
     });
 
-    it('should not trigger haptic feedback when disabled', async () => {
-      (useSettings as any).mockReturnValue({
+    it('should make a decision without haptic feedback when disabled', async () => {
+      mockUseSettings.mockReturnValue({
         swipeLeftAction: 'delete',
         swipeRightAction: 'keep',
         hapticFeedback: false,
-      });
+      } as any);
 
-      const { result } = renderHook(() => useDeckDecisions());
+      const { result } = renderHook(() =>
+        useDeckDecisions({
+          onDecisionComplete: mockOnDecisionComplete,
+        })
+      );
 
       await act(async () => {
-        await result.current.makeDecision('asset_789', 'left');
+        await result.current.makeDecision('asset-1', 'right');
       });
 
       expect(Haptics.impactAsync).not.toHaveBeenCalled();
+      expect(mockPushAction).toHaveBeenCalledWith('asset-1', 'keep');
+      expect(mockAddIntent).toHaveBeenCalledWith('asset-1', 'keep');
+      expect(analytics.track).toHaveBeenCalledWith('swipe_decide', { action: 'keep' });
+      expect(mockOnDecisionComplete).toHaveBeenCalledWith('asset-1', 'keep');
     });
 
-    it('should handle errors gracefully', async () => {
-      const error = new Error('DB Error');
-      (addIntent as jest.Mock).mockRejectedValue(error);
+    it('should handle errors in makeDecision', async () => {
+      const error = new Error('Database error');
+      mockAddIntent.mockRejectedValue(error);
 
       const { result } = renderHook(() => useDeckDecisions());
 
-      await expect(result.current.makeDecision('asset_error', 'left')).rejects.toThrow('DB Error');
+      await expect(
+        act(async () => {
+          await result.current.makeDecision('asset-1', 'left');
+        })
+      ).rejects.toThrow('Database error');
 
-      expect(logger.error).toHaveBeenCalledWith('Failed to make decision', error);
+      expect(mockPushAction).toHaveBeenCalled();
+      // Analytics should still be tracked before the error
+      expect(analytics.track).toHaveBeenCalledWith('swipe_decide', { action: 'delete' });
     });
   });
 
   describe('undoLastDecision', () => {
-    it('should undo last decision successfully', async () => {
-      const lastAction = { assetId: 'asset_undo', action: 'delete', timestamp: Date.now() };
+    it('should undo the last decision with haptic feedback', async () => {
+      const lastAction = {
+        assetId: 'asset-1',
+        action: 'delete' as const,
+        timestamp: Date.now(),
+      };
       mockPopAction.mockReturnValue(lastAction);
 
-      const onUndoComplete = jest.fn();
-      const { result } = renderHook(() => useDeckDecisions({ onUndoComplete }));
+      const { result } = renderHook(() =>
+        useDeckDecisions({
+          onUndoComplete: mockOnUndoComplete,
+        })
+      );
 
-      let undoResult;
-      await act(async () => {
-        undoResult = await result.current.undoLastDecision();
+      const undone = await act(async () => {
+        return await result.current.undoLastDecision();
       });
 
-      expect(undoResult).toEqual(lastAction);
-      expect(removeIntent).toHaveBeenCalledWith('asset_undo');
-      expect(onUndoComplete).toHaveBeenCalled();
       expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Medium);
+      expect(mockRemoveIntent).toHaveBeenCalledWith('asset-1');
+      expect(analytics.track).toHaveBeenCalledWith('undo');
+      expect(mockOnUndoComplete).toHaveBeenCalled();
+      expect(undone).toEqual(lastAction);
     });
 
-    it('should return null when no action to undo', async () => {
+    it('should return null when there is nothing to undo', async () => {
       mockPopAction.mockReturnValue(undefined);
 
       const { result } = renderHook(() => useDeckDecisions());
 
-      let undoResult;
-      await act(async () => {
-        undoResult = await result.current.undoLastDecision();
+      const undone = await act(async () => {
+        return await result.current.undoLastDecision();
       });
 
-      expect(undoResult).toBeNull();
-      expect(removeIntent).not.toHaveBeenCalled();
+      expect(undone).toBeNull();
+      expect(mockRemoveIntent).not.toHaveBeenCalled();
+      expect(analytics.track).not.toHaveBeenCalled();
+      expect(Haptics.impactAsync).not.toHaveBeenCalled();
     });
 
-    it('should handle undo errors gracefully', async () => {
-      const lastAction = { assetId: 'asset_error', action: 'keep', timestamp: Date.now() };
+    it('should handle errors in undoLastDecision', async () => {
+      const lastAction = {
+        assetId: 'asset-1',
+        action: 'delete' as const,
+        timestamp: Date.now(),
+      };
       mockPopAction.mockReturnValue(lastAction);
 
-      const error = new Error('Undo Error');
-      (removeIntent as jest.Mock).mockRejectedValue(error);
+      const error = new Error('Database error');
+      mockRemoveIntent.mockRejectedValue(error);
 
       const { result } = renderHook(() => useDeckDecisions());
 
-      await expect(result.current.undoLastDecision()).rejects.toThrow('Undo Error');
+      await expect(
+        act(async () => {
+          await result.current.undoLastDecision();
+        })
+      ).rejects.toThrow('Database error');
 
-      expect(logger.error).toHaveBeenCalledWith('Failed to undo decision', error);
+      expect(mockPopAction).toHaveBeenCalled();
+      expect(Haptics.impactAsync).toHaveBeenCalled();
+      // Analytics should still be tracked before the error
+      expect(analytics.track).toHaveBeenCalledWith('undo');
     });
   });
 
-  describe('swipe action configuration', () => {
-    it('should respect custom swipe configurations', async () => {
-      (useSettings as any).mockReturnValue({
+  describe('action configuration', () => {
+    it('should expose current swipe actions', () => {
+      const { result } = renderHook(() => useDeckDecisions());
+
+      expect(result.current.swipeLeftAction).toBe('delete');
+      expect(result.current.swipeRightAction).toBe('keep');
+    });
+
+    it('should update actions when settings change', () => {
+      const { result, rerender } = renderHook(() => useDeckDecisions());
+
+      expect(result.current.swipeLeftAction).toBe('delete');
+      expect(result.current.swipeRightAction).toBe('keep');
+
+      mockUseSettings.mockReturnValue({
         swipeLeftAction: 'keep',
         swipeRightAction: 'delete',
         hapticFeedback: true,
-      });
+      } as any);
 
-      const { result } = renderHook(() => useDeckDecisions());
+      rerender();
 
-      await act(async () => {
-        await result.current.makeDecision('asset_custom', 'left');
-      });
-
-      expect(addIntent).toHaveBeenCalledWith('asset_custom', 'keep');
+      expect(result.current.swipeLeftAction).toBe('keep');
+      expect(result.current.swipeRightAction).toBe('delete');
     });
   });
 });

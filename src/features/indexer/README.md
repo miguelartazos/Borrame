@@ -1,6 +1,7 @@
 # Photo Indexer Module
 
 ## Overview
+
 The indexer module provides progressive photo indexing with support for pause/resume, background handling, and limited access modes. It ensures only one indexing run occurs at a time and properly handles app lifecycle events.
 
 ## Architecture
@@ -41,11 +42,13 @@ const control = await runInitialIndex();
 ```
 
 ### Cancellation
+
 ```typescript
 control.cancel(); // Stops indexing and cleans up
 ```
 
 ### Automatic Pause/Resume
+
 - App goes to background → indexing pauses
 - App returns to foreground → indexing resumes
 - No manual intervention needed
@@ -53,21 +56,25 @@ control.cancel(); // Stops indexing and cleans up
 ## Permissions Handling
 
 ### Full Access (granted)
+
 - Indexes entire photo library
 - No UI warnings shown
 
 ### Limited Access
+
 - Indexes only user-selected photos
 - Shows `LimitedAccessBanner` with Settings deep-link
 - Sets `limitedScope: true` in store
 
 ### No Access (undetermined)
+
 - Indexing does not start
 - User must grant permissions first
 
 ## Testing
 
 ### Unit Tests
+
 - `detectScreenshot` - Screenshot detection logic
 - `checkCanIndex` - Permission validation
 - `mapAssetToDBSchema` - Asset transformation
@@ -75,6 +82,7 @@ control.cancel(); // Stops indexing and cleans up
 - `runInitialIndex` - Full indexing flow with mocked MediaLibrary
 
 ### Integration Tests
+
 - Cold start behavior
 - Background/foreground transitions
 - Race condition handling

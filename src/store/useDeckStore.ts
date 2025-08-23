@@ -10,6 +10,10 @@ interface DeckStore {
   removedAssetsCache: Map<string, Asset>;
   error: string | null;
 
+  // Album selection (optional filtering via MediaLibrary album)
+  selectedAlbumId: string | null;
+  selectedAlbumTitle: string | null;
+
   // Actions
   setCurrentIndex: (index: number) => void;
   setFilter: (filter: FilterType) => void;
@@ -19,6 +23,7 @@ interface DeckStore {
   clearCache: () => void;
   setError: (error: string | null) => void;
   resetDeck: () => void;
+  setSelectedAlbum: (id: string | null, title?: string | null) => void;
 }
 
 export const useDeckStore = create<DeckStore>((set, get) => ({
@@ -28,6 +33,8 @@ export const useDeckStore = create<DeckStore>((set, get) => ({
   generation: 0,
   removedAssetsCache: new Map(),
   error: null,
+  selectedAlbumId: null,
+  selectedAlbumTitle: null,
 
   // Actions
   setCurrentIndex: (index) => set({ currentIndex: index }),
@@ -74,4 +81,32 @@ export const useDeckStore = create<DeckStore>((set, get) => ({
       removedAssetsCache: new Map(),
       error: null,
     }),
+
+  setSelectedAlbum: (id, title) =>
+    set((state) => ({
+      selectedAlbumId: id,
+      selectedAlbumTitle: title ?? (id ? state.selectedAlbumTitle : null),
+      // Changing album should reset deck pagination/generation
+      currentIndex: 0,
+      generation: state.generation + 1,
+    })),
 }));
+
+// Stable selectors for state values (primitives only)
+export const useDeckFilter = () => useDeckStore((s) => s.filter);
+export const useDeckCurrentIndex = () => useDeckStore((s) => s.currentIndex);
+export const useDeckGeneration = () => useDeckStore((s) => s.generation);
+export const useDeckError = () => useDeckStore((s) => s.error);
+
+// Individual action selectors (actions are stable functions)
+export const useDeckSetFilter = () => useDeckStore((s) => s.setFilter);
+export const useDeckSetCurrentIndex = () => useDeckStore((s) => s.setCurrentIndex);
+export const useDeckIncrementGeneration = () => useDeckStore((s) => s.incrementGeneration);
+export const useDeckCacheRemovedAsset = () => useDeckStore((s) => s.cacheRemovedAsset);
+export const useDeckGetCachedAsset = () => useDeckStore((s) => s.getCachedAsset);
+export const useDeckClearCache = () => useDeckStore((s) => s.clearCache);
+export const useDeckSetError = () => useDeckStore((s) => s.setError);
+export const useDeckResetDeck = () => useDeckStore((s) => s.resetDeck);
+export const useDeckSelectedAlbumId = () => useDeckStore((s) => s.selectedAlbumId);
+export const useDeckSelectedAlbumTitle = () => useDeckStore((s) => s.selectedAlbumTitle);
+export const useDeckSetSelectedAlbum = () => useDeckStore((s) => s.setSelectedAlbum);

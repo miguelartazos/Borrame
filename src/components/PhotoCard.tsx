@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -26,12 +27,7 @@ export const PhotoCard = memo(({ asset, translateX, translateY, isTop }: PhotoCa
   const cardAnimatedStyle = useAnimatedStyle(() => {
     if (!isTop) return {};
 
-    const rotate = interpolate(
-      translateX.value,
-      [-200, 0, 200],
-      [-SWIPE_THRESHOLDS.MAX_ROTATION, 0, SWIPE_THRESHOLDS.MAX_ROTATION],
-      Extrapolation.CLAMP
-    );
+    const rotate = interpolate(translateX.value, [-200, 0, 200], [-8, 0, 8], Extrapolation.CLAMP);
 
     const scale = interpolate(
       Math.abs(translateX.value),
@@ -53,26 +49,44 @@ export const PhotoCard = memo(({ asset, translateX, translateY, isTop }: PhotoCa
   const deleteOverlayStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       translateX.value,
-      [-SWIPE_THRESHOLDS.TRANSLATE_X, 0],
+      [-SWIPE_THRESHOLDS.TRANSLATE_X, -30],
       [1, 0],
       Extrapolation.CLAMP
     );
-    return { opacity };
+    const scale = interpolate(
+      translateX.value,
+      [-SWIPE_THRESHOLDS.TRANSLATE_X, 0],
+      [1, 0.8],
+      Extrapolation.CLAMP
+    );
+    return {
+      opacity,
+      transform: [{ scale }],
+    };
   });
 
   const keepOverlayStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       translateX.value,
-      [0, SWIPE_THRESHOLDS.TRANSLATE_X],
+      [30, SWIPE_THRESHOLDS.TRANSLATE_X],
       [0, 1],
       Extrapolation.CLAMP
     );
-    return { opacity };
+    const scale = interpolate(
+      translateX.value,
+      [0, SWIPE_THRESHOLDS.TRANSLATE_X],
+      [0.8, 1],
+      Extrapolation.CLAMP
+    );
+    return {
+      opacity,
+      transform: [{ scale }],
+    };
   });
 
   return (
     <Animated.View style={[styles.card, cardAnimatedStyle]} testID="PhotoCard">
-      <Image source={{ uri: asset.uri }} style={styles.image} resizeMode="cover" />
+      <Image source={{ uri: asset.uri }} style={styles.image} contentFit="cover" />
 
       <Animated.View
         style={[styles.overlay, styles.deleteOverlay, deleteOverlayStyle]}
@@ -107,61 +121,70 @@ PhotoCard.displayName = 'PhotoCard';
 const styles = StyleSheet.create({
   card: {
     position: 'absolute',
-    width: '90%',
+    width: '92%',
     aspectRatio: 1,
-    borderRadius: 20,
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
     backgroundColor: '#fff',
   },
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: 20,
+    borderRadius: 16,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: 20,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },
   deleteOverlay: {
-    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    backgroundColor: 'transparent',
   },
   keepOverlay: {
-    backgroundColor: 'rgba(34, 197, 94, 0.15)',
+    backgroundColor: 'transparent',
   },
   overlayContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.05)',
   },
   overlayText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
   deleteText: {
-    color: '#ef4444',
+    color: '#000',
   },
   keepText: {
-    color: '#22c55e',
+    color: '#000',
   },
   metadataChip: {
     position: 'absolute',
-    bottom: 16,
-    right: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
+    bottom: 12,
+    left: 12,
+    right: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   metadataText: {
-    color: '#fff',
-    fontSize: 12,
+    color: '#000',
+    fontSize: 13,
     fontWeight: '500',
+    opacity: 0.7,
   },
 });

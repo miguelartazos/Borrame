@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { IndexingProgress } from './IndexingProgress';
 import { LimitedAccessBanner } from '../features/indexer/LimitedAccessBanner';
 
 interface DeckHeaderProps {
@@ -20,23 +19,23 @@ export const DeckHeader = memo(
       <>
         <LimitedAccessBanner />
 
-        <View className="px-4 pt-4">
+        <View className="px-4 pt-2">
           {indexRunning && (
-            <View className="mb-4">
-              <IndexingProgress />
-              <Text className="text-xs text-gray-500 text-center mt-1">
-                {t('deck.indexing.progress', { indexed, total })}
-              </Text>
+            <View className="mb-3">
+              <View className="flex-row items-center justify-center">
+                <View className="w-2 h-2 bg-black rounded-full mr-2 opacity-60" />
+                <Text className="text-xs text-gray-600 font-medium">
+                  {t('deck.indexing.progress', { indexed, total })}
+                </Text>
+              </View>
             </View>
           )}
 
           {lastError && (
-            <View className="bg-yellow-50 p-3 rounded-lg mb-4 flex-row items-center justify-between">
-              <Text className="text-sm text-yellow-800 flex-1">
-                Indexing paused due to an error
-              </Text>
-              <Pressable onPress={onRetryIndexing} className="bg-yellow-600 px-3 py-1 rounded">
-                <Text className="text-white text-sm font-medium">Retry</Text>
+            <View className="bg-gray-50 p-3 rounded-xl mb-3 flex-row items-center justify-between">
+              <Text className="text-sm text-gray-700 flex-1">{t('common.error')}</Text>
+              <Pressable onPress={onRetryIndexing} className="px-3 py-1">
+                <Text className="text-black text-sm font-semibold">{t('common.retry')}</Text>
               </Pressable>
             </View>
           )}

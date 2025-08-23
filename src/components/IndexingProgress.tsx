@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useIndexProgress } from '../store/useIndexStore';
+import { useIndexRunning, useIndexTotal, useIndexIndexed } from '../store/useIndexStore';
 
 export function IndexingProgress() {
-  const { running, total, indexed } = useIndexProgress();
+  const running = useIndexRunning();
+  const total = useIndexTotal();
+  const indexed = useIndexIndexed();
 
   if (!running || total === 0) {
     return null;

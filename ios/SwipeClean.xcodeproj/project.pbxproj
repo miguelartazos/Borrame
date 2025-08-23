@@ -8,25 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		19A9AB37C2698C206F094627 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8934CB0A6F0DE33A78A030E /* ExpoModulesProvider.swift */; };
+		1B84CE70BFE97B391224554A /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E69044C6A429EBE9E05DB5 /* ExpoModulesProvider.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		45DBCC8EE8E0F791E7258E97 /* libPods-SwipeClean.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D07D1342D07E850871D68C /* libPods-SwipeClean.a */; };
+		91F74361FCE471FB97C92B06 /* libPods-SwipeClean.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E697970D7CB27548BB672D50 /* libPods-SwipeClean.a */; };
+		A37F633C92F631A22389C898 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D20B3A6E569CA5F3E5560228 /* PrivacyInfo.xcprivacy */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C41D2D7F51B940820C20F1DB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 068AD9F624481CB829E36B27 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		068AD9F624481CB829E36B27 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = SwipeClean/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SwipeClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwipeClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SwipeClean/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SwipeClean/Info.plist; sourceTree = "<group>"; };
-		3C649076D7E723E9CAC9D6BE /* Pods-SwipeClean.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwipeClean.release.xcconfig"; path = "Target Support Files/Pods-SwipeClean/Pods-SwipeClean.release.xcconfig"; sourceTree = "<group>"; };
-		86D07D1342D07E850871D68C /* libPods-SwipeClean.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwipeClean.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A8934CB0A6F0DE33A78A030E /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-SwipeClean/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		7A097467F2DF069208BFFB4E /* Pods-SwipeClean.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwipeClean.debug.xcconfig"; path = "Target Support Files/Pods-SwipeClean/Pods-SwipeClean.debug.xcconfig"; sourceTree = "<group>"; };
+		9E3B75ABF2CDD978D7781A04 /* Pods-SwipeClean.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwipeClean.release.xcconfig"; path = "Target Support Files/Pods-SwipeClean/Pods-SwipeClean.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = SwipeClean/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		DA84A60035A06CF32BF37969 /* Pods-SwipeClean.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwipeClean.debug.xcconfig"; path = "Target Support Files/Pods-SwipeClean/Pods-SwipeClean.debug.xcconfig"; sourceTree = "<group>"; };
+		D20B3A6E569CA5F3E5560228 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = SwipeClean/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E697970D7CB27548BB672D50 /* libPods-SwipeClean.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwipeClean.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6E69044C6A429EBE9E05DB5 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-SwipeClean/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = SwipeClean/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* SwipeClean-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "SwipeClean-Bridging-Header.h"; path = "SwipeClean/SwipeClean-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45DBCC8EE8E0F791E7258E97 /* libPods-SwipeClean.a in Frameworks */,
+				91F74361FCE471FB97C92B06 /* libPods-SwipeClean.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				068AD9F624481CB829E36B27 /* PrivacyInfo.xcprivacy */,
+				D20B3A6E569CA5F3E5560228 /* PrivacyInfo.xcprivacy */,
 			);
 			name = SwipeClean;
 			sourceTree = "<group>";
@@ -62,35 +62,9 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				86D07D1342D07E850871D68C /* libPods-SwipeClean.a */,
+				E697970D7CB27548BB672D50 /* libPods-SwipeClean.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		330E72BFE4EF6F8260D8C3ED /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				DA84A60035A06CF32BF37969 /* Pods-SwipeClean.debug.xcconfig */,
-				3C649076D7E723E9CAC9D6BE /* Pods-SwipeClean.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		54FE15172799FE00EBC2C0B6 /* SwipeClean */ = {
-			isa = PBXGroup;
-			children = (
-				A8934CB0A6F0DE33A78A030E /* ExpoModulesProvider.swift */,
-			);
-			name = SwipeClean;
-			sourceTree = "<group>";
-		};
-		5CF84F5CB1FFEB5BD2D8CEC3 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				54FE15172799FE00EBC2C0B6 /* SwipeClean */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -107,8 +81,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				330E72BFE4EF6F8260D8C3ED /* Pods */,
-				5CF84F5CB1FFEB5BD2D8CEC3 /* ExpoModulesProviders */,
+				C2F16F5FAEAD919DFA5CD7C7 /* Pods */,
+				9FB1C7A223BB6E4DAB0AB800 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -123,6 +97,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		9FB1C7A223BB6E4DAB0AB800 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				FE8E135F7A35B44853457D87 /* SwipeClean */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +112,23 @@
 			);
 			name = Supporting;
 			path = SwipeClean/Supporting;
+			sourceTree = "<group>";
+		};
+		C2F16F5FAEAD919DFA5CD7C7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7A097467F2DF069208BFFB4E /* Pods-SwipeClean.debug.xcconfig */,
+				9E3B75ABF2CDD978D7781A04 /* Pods-SwipeClean.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		FE8E135F7A35B44853457D87 /* SwipeClean */ = {
+			isa = PBXGroup;
+			children = (
+				E6E69044C6A429EBE9E05DB5 /* ExpoModulesProvider.swift */,
+			);
+			name = SwipeClean;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,13 +139,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SwipeClean" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				424856306F5267A4FFE74C10 /* [Expo] Configure project */,
+				B3872991CF58DE6720F278F9 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				EDC60AD4E5C6CCD7E7E29F38 /* [CP] Embed Pods Frameworks */,
+				559353C4E9DC2D46DB23B9CF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +195,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				C41D2D7F51B940820C20F1DB /* PrivacyInfo.xcprivacy in Resources */,
+				A37F633C92F631A22389C898 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,24 +239,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		424856306F5267A4FFE74C10 /* [Expo] Configure project */ = {
+		559353C4E9DC2D46DB23B9CF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SwipeClean/Pods-SwipeClean-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-SwipeClean/expo-configure-project.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwipeClean/Pods-SwipeClean-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -276,6 +274,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
 			);
@@ -291,6 +290,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
 			);
@@ -299,23 +299,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwipeClean/Pods-SwipeClean-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EDC60AD4E5C6CCD7E7E29F38 /* [CP] Embed Pods Frameworks */ = {
+		B3872991CF58DE6720F278F9 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SwipeClean/Pods-SwipeClean-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			inputFileListPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwipeClean/Pods-SwipeClean-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-SwipeClean/expo-configure-project.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -325,7 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				19A9AB37C2698C206F094627 /* ExpoModulesProvider.swift in Sources */,
+				1B84CE70BFE97B391224554A /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,12 +335,13 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DA84A60035A06CF32BF37969 /* Pods-SwipeClean.debug.xcconfig */;
+			baseConfigurationReference = 7A097467F2DF069208BFFB4E /* Pods-SwipeClean.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SwipeClean/SwipeClean.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 66NS6SY24T;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -358,7 +360,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.swipeclean.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miguel.swipeclean;
 				PRODUCT_NAME = SwipeClean;
 				SWIFT_OBJC_BRIDGING_HEADER = "SwipeClean/SwipeClean-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -370,12 +372,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3C649076D7E723E9CAC9D6BE /* Pods-SwipeClean.release.xcconfig */;
+			baseConfigurationReference = 9E3B75ABF2CDD978D7781A04 /* Pods-SwipeClean.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SwipeClean/SwipeClean.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 66NS6SY24T;
 				INFOPLIST_FILE = SwipeClean/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -389,7 +392,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.swipeclean.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miguel.swipeclean;
 				PRODUCT_NAME = SwipeClean;
 				SWIFT_OBJC_BRIDGING_HEADER = "SwipeClean/SwipeClean-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -453,10 +456,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -511,10 +511,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

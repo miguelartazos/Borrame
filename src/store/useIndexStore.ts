@@ -10,6 +10,12 @@ interface IndexStore {
   limitedCount: number;
   lastError?: string;
   lastSuccessfulBatchAt?: number;
+  debugOverrides?: {
+    running?: boolean;
+    paused?: boolean;
+    total?: number;
+    indexed?: number;
+  };
 
   setProgress: (total: number, indexed: number) => void;
   setRunning: (running: boolean) => void;
@@ -20,9 +26,14 @@ interface IndexStore {
   setLastError: (error?: string) => void;
   setLastSuccessfulBatch: (timestamp: number) => void;
   resetRunState: () => void;
+  setDebugOverrides: (overrides: IndexStore['debugOverrides']) => void;
+  getRunning: () => boolean;
+  getPaused: () => boolean;
+  getTotal: () => number;
+  getIndexed: () => number;
 }
 
-export const useIndexStore = create<IndexStore>((set) => ({
+export const useIndexStore = create<IndexStore>((set, get) => ({
   total: 0,
   indexed: 0,
   running: false,
@@ -32,6 +43,7 @@ export const useIndexStore = create<IndexStore>((set) => ({
   limitedCount: 0,
   lastError: undefined,
   lastSuccessfulBatchAt: undefined,
+  debugOverrides: undefined,
 
   setProgress: (total, indexed) => set({ total, indexed }),
   setRunning: (running) => set({ running }),
@@ -51,16 +63,36 @@ export const useIndexStore = create<IndexStore>((set) => ({
       limitedCount: 0,
       lastError: undefined,
     }),
+  setDebugOverrides: (overrides) => set({ debugOverrides: overrides }),
+  getRunning: () => {
+    const state = get();
+    return state.debugOverrides?.running ?? state.running;
+  },
+  getPaused: () => {
+    const state = get();
+    return state.debugOverrides?.paused ?? state.paused;
+  },
+  getTotal: () => {
+    const state = get();
+    return state.debugOverrides?.total ?? state.total;
+  },
+  getIndexed: () => {
+    const state = get();
+    return state.debugOverrides?.indexed ?? state.indexed;
+  },
 }));
 
-// Selectors for UI to avoid re-render storms
-export const useIndexProgress = () =>
-  useIndexStore((s) => ({ running: s.running, total: s.total, indexed: s.indexed }));
+// Individual primitive selectors to avoid re-render storms
+// For useIndexProgress - split into individual selectors
+export const useIndexRunning = () => useIndexStore((s) => s.running);
+export const useIndexTotal = () => useIndexStore((s) => s.total);
+export const useIndexIndexed = () => useIndexStore((s) => s.indexed);
 
-export const useIndexStatus = () =>
-  useIndexStore((s) => ({
-    running: s.running,
-    paused: s.paused,
-    limitedScope: s.limitedScope,
-    limitedCount: s.limitedCount,
-  }));
+// For useIndexStatus - split into individual selectors
+export const useIndexPaused = () => useIndexStore((s) => s.paused);
+export const useIndexLimitedScope = () => useIndexStore((s) => s.limitedScope);
+export const useIndexLimitedCount = () => useIndexStore((s) => s.limitedCount);
+
+// Other primitive selectors
+export const useLastError = () => useIndexStore((s) => s.lastError);
+export const useLastSuccessfulBatch = () => useIndexStore((s) => s.lastSuccessfulBatchAt);

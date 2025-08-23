@@ -1,16 +1,28 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Linking, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { Camera } from 'lucide-react-native';
 import { usePermissions } from '../store/usePermissions';
+import { logger } from '../lib/logger';
 
 export function RequestPhotos() {
   const { t } = useTranslation();
-  const { status, requestAccess } = usePermissions();
+  const status = usePermissions((s) => s.status);
+  const requestAccess = usePermissions((s) => s.requestAccess);
 
   const handleAllowAccess = async () => {
-    await requestAccess();
+    try {
+      const result = await requestAccess();
+      if (result === 'limited') {
+        Alert.alert(t('requestPhotos.title'), t('requestPhotos.limitedBanner'), [
+          { text: t('common.ok') },
+        ]);
+      }
+    } catch (error) {
+      logger.error('Failed to request permissions:', error as Error);
+      Alert.alert(t('common.error'), t('requestPhotos.error'));
+    }
   };
 
   const handleOpenSettings = () => {
@@ -43,6 +55,7 @@ export function RequestPhotos() {
           onPress={handleAllowAccess}
           className="bg-blue-500 px-8 py-4 rounded-full mt-12"
           activeOpacity={0.8}
+          testID="allowAccessButton"
         >
           <Text className="text-white font-semibold text-lg">{t('requestPhotos.cta')}</Text>
         </TouchableOpacity>

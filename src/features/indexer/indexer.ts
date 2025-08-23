@@ -1,9 +1,11 @@
 import * as MediaLibrary from 'expo-media-library';
 import { InteractionManager, AppState, AppStateStatus } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import type { Asset as DBAsset } from '../../db/schema';
-import { insertAssets, getAssetCount } from '../../db/helpers';
+import { insertAssets, getAssetCount, getLatestAssetTimestamp } from '../../db/helpers';
 import { useIndexStore } from '../../store/useIndexStore';
 import { usePermissions } from '../../store/usePermissions';
+import { useSettings } from '../../store/useSettings';
 import { logger } from '../../lib/logger';
 
 // Constants
@@ -115,18 +117,79 @@ export function detectScreenshot(asset: MediaLibrary.Asset): boolean {
   return isLandscapeMatch;
 }
 
+// Helper to estimate file size when not available from MediaLibrary
+function estimateFileSize(asset: MediaLibrary.Asset): number {
+  // TODO: MediaLibrary doesn't expose fileSize property
+  // This is a rough estimation - actual sizes may vary significantly
+  // Consider using expo-file-system to get accurate sizes for critical features
+
+  if (asset.mediaType === MediaLibrary.MediaType.video) {
+    const durationSec = asset.duration || 0;
+    // Estimate ~500KB/sec for compressed video (H.264 baseline)
+    return Math.round(durationSec * 500000);
+  }
+
+  // Photo size estimation based on dimensions
+  const pixels = (asset.width || 0) * (asset.height || 0);
+  // Estimate ~0.3 bytes per pixel for compressed JPEG (quality ~80)
+  return Math.round(pixels * 0.3);
+}
+
+// Helper to detect blur using available metadata
+function detectBlur(asset: MediaLibrary.Asset): number {
+  // TODO: Implement real blur detection when we have:
+  // 1. Access to EXIF data (ISO, ShutterSpeed) via expo-media-library v2
+  // 2. Image processing capability (Laplacian variance) via expo-image-manipulator
+  // 3. Or ML model integration via TensorFlow.js
+  // Currently returns 0 as safe default - no false positives
+
+  // Simple heuristics since we don't have EXIF in MediaLibrary
+  // Mark screenshots as not blurry
+  if (detectScreenshot(asset)) return 0;
+
+  return 0;
+}
+
+// Helper to generate content hash for duplicate detection
+function generateContentHash(asset: MediaLibrary.Asset): string | undefined {
+  // Create hash from available metadata
+  // Better than nothing, but not as good as actual file hash
+  if (asset.width && asset.height && asset.modificationTime) {
+    return `${asset.width}x${asset.height}_${asset.modificationTime}_${asset.duration || 0}`;
+  }
+  return undefined;
+}
+
+// Helper to detect bundle categories
+function detectBundleMetadata(asset: MediaLibrary.Asset) {
+  const uri = asset.uri.toLowerCase();
+
+  return {
+    is_blurry: detectBlur(asset),
+    is_burst: 0, // MediaLibrary doesn't expose burst info
+    is_whatsapp: uri.includes('whatsapp') || uri.includes('telegram') ? 1 : 0,
+    is_video: asset.mediaType === MediaLibrary.MediaType.video ? 1 : 0,
+    duration_ms: asset.duration ? Math.round(asset.duration * 1000) : undefined,
+    mime_type: String(asset.mediaType) || undefined,
+    content_hash: generateContentHash(asset),
+    size_bytes: estimateFileSize(asset) || null,
+  };
+}
+
 export function mapAssetToDBSchema(
   asset: MediaLibrary.Asset,
   timestamp: number
 ): Omit<DBAsset, 'id'> {
+  const bundleMetadata = detectBundleMetadata(asset);
+
   return {
     uri: asset.uri,
     filename: asset.filename || null,
-    size_bytes: null,
     width: asset.width || null,
     height: asset.height || null,
     created_at: asset.creationTime || timestamp,
     is_screenshot: detectScreenshot(asset) ? 1 : 0,
+    ...bundleMetadata,
   };
 }
 
@@ -136,6 +199,10 @@ export async function processAssetBatch(rows: Omit<DBAsset, 'id'>[]): Promise<vo
   // This will throw on failure (transaction rollback)
   await insertAssets(rows);
 }
+
+// Resolve accurate file sizes for a batch using MediaLibrary.getAssetInfoAsync
+// Note: MediaLibrary.getAssetInfoAsync typings may not expose fileSize on current SDK; keeping
+// this helper out until we integrate a precise size retrieval strategy (e.g., expo-file-system).
 
 // Optimized progress update - only update when percentage changes
 let lastProgressPercent = -1;
@@ -214,12 +281,9 @@ export async function runInitialIndex(options: IndexOptions = {}): Promise<Index
       return createIndexControl(''); // Return no-op control
     }
 
-    // Check if DB already has assets
+    // Determine mode: initial or incremental
     const existingCount = await getAssetCount();
-    if (existingCount > 0) {
-      logger.info(`Database already has ${existingCount} assets, skipping initial index`);
-      return createIndexControl(''); // Return no-op control
-    }
+    const isInitial = existingCount === 0;
 
     // Generate run ID and create control
     const runId = generateRunId();
@@ -279,18 +343,27 @@ export async function runInitialIndex(options: IndexOptions = {}): Promise<Index
         const batch = await fetchAssetBatch({ first: pageSize, after });
 
         if (batch.assets.length > 0) {
+          // If incremental, filter to only assets newer than our latest timestamp
+          let assetsToProcess = batch.assets;
+          if (!isInitial) {
+            const latest = await getLatestAssetTimestamp();
+            assetsToProcess = batch.assets.filter((a) => (a.creationTime || 0) > latest);
+          }
+
           // Map assets to DB schema
           const timestamp = Date.now();
-          const dbRows = batch.assets.map((asset) => mapAssetToDBSchema(asset, timestamp));
+          const dbRows = assetsToProcess.map((asset) => mapAssetToDBSchema(asset, timestamp));
 
           // Process batch in transaction
-          await processAssetBatch(dbRows);
+          if (dbRows.length > 0) {
+            await processAssetBatch(dbRows);
+          }
 
           // Record successful batch
           store.setLastSuccessfulBatch(Date.now());
 
           // Update progress
-          indexedCount += batch.assets.length;
+          indexedCount += assetsToProcess.length;
           updateIndexProgress(totalCount, indexedCount);
         }
 
@@ -308,6 +381,22 @@ export async function runInitialIndex(options: IndexOptions = {}): Promise<Index
       }
 
       logger.info(`Indexing completed: ${indexedCount} photos indexed`);
+
+      // Success haptic feedback when bundle scanning completes
+      const hapticFeedback = useSettings.getState().hapticFeedback;
+      if (hapticFeedback && indexedCount > 0) {
+        // Run haptic after interactions to prevent frame drops
+        if (InteractionManager?.runAfterInteractions) {
+          await InteractionManager.runAfterInteractions();
+        }
+
+        try {
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        } catch (hapticError) {
+          // Log error for telemetry but don't throw
+          logger.warn('Haptic feedback failed', hapticError);
+        }
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       logger.error('Indexing error:', errorMessage);

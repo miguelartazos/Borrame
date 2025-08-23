@@ -1,0 +1,366 @@
+{
+  "landing": {
+    "continue": "Continuar",
+    "terms": "Al usar SwipeClean, aceptas nuestros Términos y Política de Privacidad."
+  },
+  "settings": {
+    "title": "Configuración"
+  },
+  "home": {
+    "revisado": "revisado",
+    "ordenarAhora": "Ordenar ahora",
+    "floatingButton_hint": "Desliza a la derecha para ocultar",
+    "listos": "listos",
+    "tuBiblioteca": "Tu biblioteca",
+    "papeleraPendiente": "Papelera Pendiente",
+    "ajustarMeta": "Ajustar meta",
+    "unDiaComoHoy": "Un día como hoy",
+    "fotos": "{{n}} fotos",
+    "bibliotecaMeses": "Tu biblioteca · {{n}} meses",
+    "meses": "{{n}} meses",
+    "verTodo": "Ver todo",
+    "biblioteca": "Biblioteca",
+    "racha": "Racha",
+    "meta": "Meta",
+    "hoy": "Hoy",
+    "completado": "completado",
+    "noCompletado": "no completado",
+    "chips": {
+      "all": "Todo",
+      "screenshots": "Pantallazos",
+      "blurry": "Borrosas",
+      "similar": "Similares",
+      "videos": "Vídeos",
+      "todo": "Todo",
+      "pantallazos": "Pantallazos",
+      "borrosas": "Borrosas",
+      "similares": "Similares"
+    },
+    "months": {
+      "ene": "ene",
+      "feb": "feb",
+      "mar": "mar",
+      "abr": "abr",
+      "may": "may",
+      "jun": "jun",
+      "jul": "jul",
+      "ago": "ago",
+      "sep": "sep",
+      "oct": "oct",
+      "nov": "nov",
+      "dic": "dic"
+    }
+  },
+  "requestPhotos": {
+    "title": "SwipeClean",
+    "subtitle": "Para ayudarte a organizar tus fotos, necesitamos acceso a tu biblioteca completa. Esto te permite revisar y limpiar todos tus recuerdos.",
+    "cta": "Permitir Acceso",
+    "limitedBanner": "Has dado acceso limitado. Toca aquí para otorgar acceso completo en Configuración.",
+    "error": "No pudimos solicitar acceso a fotos. Inténtalo de nuevo."
+  },
+  "indexer": {
+    "limitedAccess": {
+      "title": "Acceso limitado",
+      "body": "Solo {{count}} fotos disponibles. Otorga Acceso Completo para revisar todo.",
+      "cta": "Abrir Configuración"
+    }
+  },
+  "deck": {
+    "title": "Revisar Fotos",
+    "filters": {
+      "all": "Todas",
+      "screenshots": "Capturas",
+      "recent": "Recientes"
+    },
+    "overlayDelete": "ELIMINAR",
+    "overlayKeep": "MANTENER",
+    "delete": "Eliminar",
+    "keep": "Mantener",
+    "undo": "Deshacer",
+    "deletePhoto": "Eliminar foto",
+    "deletePhotoHint": "Marcar esta foto para eliminar",
+    "keepPhoto": "Mantener foto",
+    "keepPhotoHint": "Mantener esta foto en tu biblioteca",
+    "empty": {
+      "title": "¡Todo al día!",
+      "subtitle": "Nada que revisar aquí.",
+      "switchFilter": "Prueba un filtro diferente",
+      "openPending": "Revisar Eliminaciones Pendientes"
+    },
+    "indexing": {
+      "progress": "Indexando {{indexed}} / {{total}}"
+    },
+    "counter": "{{reviewed}} / {{available}}",
+    "tutorial": {
+      "title": "Desliza para ordenar tus fotos",
+      "left": "Izquierda = Eliminar",
+      "right": "Derecha = Guardar",
+      "cta": "Entendido",
+      "archive": "Archivo",
+      "save": "Guardar",
+      "swipeLeft": "Desliza a la izquierda para archivar",
+      "swipeRight": "Desliza a la derecha para guardar"
+    },
+    "albumChip": {
+      "selected": "Álbum: {{title}}"
+    }
+  },
+  "paywall": {
+    "unlock_bundle_title": "Desbloquea Detección Inteligente",
+    "unlock_pro_title": "Activa SwipeClean Pro",
+    "unlock_bundle_subtitle": "Encuentra y limpia fotos similares y borrosas automáticamente",
+    "activate_pro_clean_all": "Activar Pro para limpiar todo",
+    "preview_title": "{{count}} fotos detectadas",
+    "benefits": {
+      "smart_detection": "Detección Inteligente",
+      "smart_detection_desc": "Encuentra fotos similares y borrosas automáticamente",
+      "unlimited_deletes": "Eliminaciones Ilimitadas",
+      "unlimited_deletes_desc": "Sin límite diario de 50 fotos",
+      "priority_support": "Soporte Prioritario",
+      "priority_support_desc": "Ayuda directa del equipo de SwipeClean"
+    },
+    "best_value": "MEJOR OFERTA",
+    "yearly_plan": "Plan Anual",
+    "monthly_plan": "Plan Mensual",
+    "year": "año",
+    "month": "mes",
+    "yearly_savings": "Ahorra 33% vs mensual",
+    "monthly_detail": "Se renueva mensualmente",
+    "disclaimer": "Los precios están en USD. La suscripción se renueva automáticamente. Cancela en cualquier momento.",
+    "maybe_later": "Tal vez más tarde"
+  },
+  "categories": {
+    "tile_locked": "{{title}}: {{count}} fotos (Pro)",
+    "tile_unlocked": "{{title}}: {{count}} fotos"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "retry": "Reintentar",
+    "ok": "OK",
+    "done": "Listo",
+    "error": "Error",
+    "success": "Éxito",
+    "partial": "Éxito Parcial",
+    "openSettings": "Abrir Configuración"
+  },
+  "pending": {
+    "title": "Papelera Pendiente",
+    "empty": {
+      "title": "No hay fotos marcadas para eliminar",
+      "subtitle": "Vuelve para revisar tus fotos",
+      "goBack": "Revisar Fotos"
+    },
+    "commit": {
+      "cta": "Confirmar",
+      "noItems": "No hay elementos para eliminar",
+      "preparing": "Preparando para eliminar...",
+      "failed": "Error al confirmar eliminaciones",
+      "permissionError": "Se revocó el permiso de la biblioteca de fotos. Por favor otorga acceso en Configuración para continuar.",
+      "preview": {
+        "title": "Confirmar Eliminación",
+        "message": "{{count}} fotos se moverán a Eliminadas Recientemente. Espacio estimado liberado: {{size}}"
+      },
+      "confirm": {
+        "title": "¿Mover a Eliminadas Recientemente?",
+        "button": "Mover a Eliminadas Recientemente",
+        "large": "Esta es una eliminación grande. {{message}}"
+      },
+      "doubleConfirm": {
+        "title": "¿Estás absolutamente seguro?",
+        "message": "Esta acción no se puede deshacer inmediatamente. Las fotos estarán en Eliminadas Recientemente por 30 días.",
+        "button": "Sí, Eliminar"
+      }
+    },
+    "restore": "Restaurar",
+    "restoreAll": "Restaurar Todas",
+    "selected": "{{count}} seleccionadas",
+    "spaceEstimate": "~{{size}} para liberar",
+    "restore.failed": "Error al restaurar elemento",
+    "restoreAll.title": "¿Restaurar Todas las Fotos?",
+    "restoreAll.message": "Esto eliminará todas las fotos de la papelera pendiente",
+    "restoreAll.failed": "Error al restaurar todos los elementos"
+  },
+  "limits": {
+    "meter": "Puedes eliminar {{remaining}} más hoy",
+    "hitCap": "Has alcanzado el límite gratuito de hoy",
+    "unlimited": "Eliminaciones ilimitadas"
+  },
+  "onThisDay": {
+    "title": "Un día como hoy",
+    "photos": "fotos",
+    "cta": "Revisar 5 mejores",
+    "accessibilityLabel": "Tarjeta de un día como hoy con {{count}} fotos",
+    "imageError": "Error al cargar imagen",
+    "previewImage": "Vista previa {{number}}",
+    "placeholderImage": "Marcador {{number}}",
+    "loadingImage": "Cargando imagen"
+  },
+  "paywall": {
+    "title": "Limpia tu galería completa hoy",
+    "subtitle": "Desbloquea eliminaciones ilimitadas y funciones premium",
+    "unlock": "Desbloquear Premium",
+    "benefits": {
+      "unlimited": "Eliminaciones de fotos ilimitadas todos los días",
+      "priority": "Procesamiento prioritario para bibliotecas grandes",
+      "advanced": "Filtros avanzados y sugerencias inteligentes"
+    },
+    "monthly": {
+      "title": "Mensual",
+      "description": "Cancela cuando quieras"
+    },
+    "yearly": {
+      "title": "Anual",
+      "description": "Ahorra 33% con facturación anual",
+      "badge": "AHORRA 33%"
+    },
+    "terms": "La suscripción se renueva automáticamente. Cancela cuando quieras en Configuración."
+  },
+  "result": {
+    "success": "Se movieron {{count}} elementos a Eliminadas Recientemente. {{size}} liberados.",
+    "partial": "{{success}} eliminados, {{failed}} fallaron",
+    "retryFailed": "Reintentar Elementos Fallidos"
+  },
+  "streak": {
+    "current": "Racha actual",
+    "days": "días",
+    "setGoal": "Elige tu meta",
+    "pills": {
+      "streak": "Racha",
+      "goal": "Meta",
+      "today": "Hoy",
+      "perDay": "/día",
+      "minPerDay_one": "min/día",
+      "minPerDay_other": "mins/día"
+    },
+    "modal": {
+      "title": "Ajustar Metas",
+      "minutesLabel": "Meta de tiempo diaria",
+      "minutesUnit": "minutos por día",
+      "mbLabel": "Meta de espacio diaria",
+      "weekLabel": "Esta semana",
+      "save": "Guardar Metas"
+    }
+  },
+  "stats": {
+    "sorted": "ordenadas",
+    "toDelete": "para eliminar"
+  },
+  "carousel": {
+    "onThisDay": "Un día como hoy",
+    "noPhotos": "No hay fotos de este día en años anteriores"
+  },
+  "sorting": {
+    "title": "Ordenar"
+  },
+  "header": {
+    "invite": "Invitar",
+    "inviteTooltip": "Invita a tus amigos"
+  },
+  "referrals": {
+    "title": "Invitar amigos",
+    "shareCode": "compartir código",
+    "earnRewards": "Gana recompensas",
+    "friendsJoined": "{{count}} amigos se unieron",
+    "friendsJoinedProgress": "{{current}} de {{target}} amigos se unieron",
+    "rewards": {
+      "swipesPerFriend": "1000 deslizamientos",
+      "perFriend": "por cada amigo",
+      "monthPro": "Un mes de SUPER Picnic",
+      "yearPro": "Un año de SUPER Picnic",
+      "forFriends": "para {{count}} amigos"
+    },
+    "inviteFriendsCta": "Invita a amigos",
+    "redeemCodeCta": "Canjear código",
+    "copy": "Copiar",
+    "share": "Compartir",
+    "enterCode": "Introduce tu código",
+    "redeem": "Canjear",
+    "invalidCode": "Código inválido",
+    "redeemTitle": "Canjear código",
+    "redeemSubtitle": "Comparte tu código con amigos o canjea uno aquí"
+  },
+  "heroCard": {
+    "cleanNow": "Ordenar ahora",
+    "spaceReady": "para eliminar",
+    "reviewed": "revisado",
+    "swipeHint": "Desliza para organizar. Puedes deshacer en cualquier momento.",
+    "cleanHint": "Empieza a organizar tus fotos deslizando"
+  },
+  "bundles": {
+    "title": "Smart Bundles",
+    "duplicados": "Duplicados",
+    "borrosas": "Borrosas",
+    "pantallazos": "Pantallazos",
+    "rafaga": "En ráfaga",
+    "whatsapp": "WhatsApp/Telegram",
+    "videos_largos": "Vídeos largos",
+    "archivos_grandes": "Archivos grandes",
+    "recibos": "Recibos/Docs",
+    "pro_badge": "Pro",
+    "tile_locked": "{{title}}, {{count}} elementos, bloqueado",
+    "tile_unlocked": "{{title}}, {{count}} elementos"
+  },
+  "categories": {
+    "duplicates": "Duplicados",
+    "blurry": "Borrosas",
+    "screenshots": "Pantallazos",
+    "burst": "En ráfaga",
+    "whatsapp": "WhatsApp/Telegram",
+    "long_videos": "Vídeos largos",
+    "large_files": "Archivos grandes",
+    "documents": "Documentos/Recibos",
+    "tile_locked": "{{title}}: {{count}} elementos, Función Pro",
+    "tile_unlocked": "{{title}}: {{count}} elementos"
+  },
+  "floatingButton": {
+    "swipeNow": "Deslizar ahora",
+    "hint": "Desliza a la derecha para ocultar"
+  },
+  "library": {
+    "title": "Tu biblioteca",
+    "loadError": "Error al cargar la biblioteca",
+    "filterComingSoon": "Los filtros estarán disponibles pronto",
+    "filterTitle": "Filtrar y ordenar",
+    "sortBy": "Ordenar por",
+    "filterBy": "Tipo",
+    "sort": {
+      "newest": "Más nuevas",
+      "oldest": "Más antiguas"
+    },
+    "filter": {
+      "all": "Todo",
+      "photos": "Fotos",
+      "videos": "Vídeos"
+    },
+    "empty": {
+      "title": "Biblioteca vacía",
+      "subtitle": "No hay fotos para mostrar"
+    },
+    "actions": {
+      "title": "Acciones",
+      "duplicates": "Revisar duplicados",
+      "videosOnly": "Solo vídeos",
+      "oldestFirst": "Más antiguas primero"
+    },
+    "months": {
+      "january": "enero",
+      "february": "febrero",
+      "march": "marzo",
+      "april": "abril",
+      "may": "mayo",
+      "june": "junio",
+      "july": "julio",
+      "august": "agosto",
+      "september": "septiembre",
+      "october": "octubre",
+      "november": "noviembre",
+      "december": "diciembre"
+    }
+  },
+  "albumPicker": {
+    "title": "Elegir álbum",
+    "searchPlaceholder": "Buscar álbumes",
+    "allPhotos": "Todas las fotos"
+  }
+}

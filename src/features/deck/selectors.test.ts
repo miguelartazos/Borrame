@@ -130,6 +130,66 @@ describe('Deck Selectors', () => {
         expect.any(Array)
       );
     });
+
+    it('should filter videos when filter is videos', async () => {
+      (db.getAllAsync as jest.Mock).mockResolvedValue([]);
+
+      await getUndecidedAssets({
+        filter: 'videos',
+        limit: 60,
+        offset: 0,
+      });
+
+      expect(db.getAllAsync).toHaveBeenCalledWith(
+        expect.stringContaining("a.filename LIKE '%.mp4'"),
+        [60, 0]
+      );
+    });
+
+    it('should filter duplicates when filter is duplicates', async () => {
+      (db.getAllAsync as jest.Mock).mockResolvedValue([]);
+
+      await getUndecidedAssets({
+        filter: 'duplicates',
+        limit: 60,
+        offset: 0,
+      });
+
+      expect(db.getAllAsync).toHaveBeenCalledWith(expect.stringContaining('EXISTS'), [60, 0]);
+    });
+
+    it('should handle monthFilter parameter', async () => {
+      (db.getAllAsync as jest.Mock).mockResolvedValue([]);
+
+      await getUndecidedAssets({
+        filter: 'all',
+        limit: 60,
+        offset: 0,
+        monthFilter: '2024-01',
+      });
+
+      expect(db.getAllAsync).toHaveBeenCalledWith(expect.stringContaining('strftime'), [
+        '2024-01',
+        60,
+        0,
+      ]);
+    });
+
+    it('should handle sortOrder oldest', async () => {
+      (db.getAllAsync as jest.Mock).mockResolvedValue([]);
+
+      await getUndecidedAssets({
+        filter: 'all',
+        limit: 60,
+        offset: 0,
+        sortOrder: 'oldest',
+      });
+
+      expect(db.getAllAsync).toHaveBeenCalledWith(
+        expect.stringContaining('ORDER BY a.created_at ASC'),
+        [60, 0]
+      );
+    });
   });
 
   describe('getUndecidedCount', () => {
@@ -160,6 +220,38 @@ describe('Deck Selectors', () => {
         []
       );
       expect(result).toBe(10);
+    });
+
+    it('should count videos when filter is videos', async () => {
+      (db.getFirstAsync as jest.Mock).mockResolvedValue({ count: 5 });
+
+      const result = await getUndecidedCount('videos');
+
+      expect(db.getFirstAsync).toHaveBeenCalledWith(
+        expect.stringContaining("a.filename LIKE '%.mp4'"),
+        []
+      );
+      expect(result).toBe(5);
+    });
+
+    it('should count duplicates when filter is duplicates', async () => {
+      (db.getFirstAsync as jest.Mock).mockResolvedValue({ count: 3 });
+
+      const result = await getUndecidedCount('duplicates');
+
+      expect(db.getFirstAsync).toHaveBeenCalledWith(expect.stringContaining('EXISTS'), []);
+      expect(result).toBe(3);
+    });
+
+    it('should handle monthFilter parameter', async () => {
+      (db.getFirstAsync as jest.Mock).mockResolvedValue({ count: 15 });
+
+      const result = await getUndecidedCount('all', '2024-01');
+
+      expect(db.getFirstAsync).toHaveBeenCalledWith(expect.stringContaining('strftime'), [
+        '2024-01',
+      ]);
+      expect(result).toBe(15);
     });
   });
 

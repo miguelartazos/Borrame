@@ -40,4 +40,12 @@ export const db = {
     }
     return dbInstance.getFirstAsync(sql, params);
   },
+
+  async execAsync(sql: string): Promise<void> {
+    if (!dbInstance) {
+      const { getDatabase } = await import('./migrate');
+      dbInstance = await getDatabase();
+    }
+    return dbInstance.execAsync(sql);
+  },
 };
